@@ -1,34 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import SearchQuery from "./SearchQuery";
 
-const BASEURL = "http://localhost:8000";
+//Components
+import SearchQuery from "./SearchQuery";
+//Hooks
+import { useSearchGames } from "../hooks";
+import { useDebounce } from "hooks/useDebounce";
 
 const SearchBar = ({ placeholder = "Search..." }) => {
-  const [searchedGames, setSearchedGames] = useState([]);
   const [searchQuery, setSearchQuery] = useState();
-  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (!searchQuery) {
-      setSearchedGames([]);
-      return;
-    }
-    setIsLoading(true);
-    const handler = setTimeout(async () => {
-      try {
-        const res = await fetch(`${BASEURL}/games/search/${searchQuery}`);
-        const data = await res.json();
-        setSearchedGames(data.searched);
-      } catch (error) {
-        console.error(error);
-        setSearchedGames([]);
-      } finally {
-        setIsLoading(false);
-      }
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
+  const debouncedQuery = useDebounce(searchQuery, 500);
+  const { data: searchedGames = [], isLoading } =
+    useSearchGames(debouncedQuery);
 
   return (
     <>
@@ -50,13 +34,19 @@ const SearchBar = ({ placeholder = "Search..." }) => {
             ))}
           </div>
         )}
-        {!isLoading &&
-          searchQuery?.length > 0 &&
-          searchedGames?.length === 0 && (
-            <div className="z-10 absolute bg-white shadow-lg mt-1 p-2 border border-gray-200 rounded-lg divide-y w-full">
-              <p>No results found</p>
-            </div>
-          )}
+        {debouncedQuery && (
+          <div className="z-10 absolute bg-white shadow-lg mt-1 border border-gray-200 rounded-lg divide-y w-full">
+            {isLoading ? (
+              <p className="p-2">Loading...</p>
+            ) : searchedGames.length > 0 ? (
+              searchedGames.map((game) => (
+                <SearchQuery key={game.id} game={game} />
+              ))
+            ) : (
+              <p className="p-2">No results found</p>
+            )}
+          </div>
+        )}
       </div>
     </>
   );

@@ -16,6 +16,7 @@ export default defineConfig({
       layouts: path.resolve(__dirname, "src/layouts"),
       features: path.resolve(__dirname, "src/features"),
       games: path.resolve(__dirname, "src/features/games"),
+      hooks: path.resolve(__dirname, "src/shared/hooks"),
       provider: path.resolve(__dirname, "src/provider"),
     },
   },

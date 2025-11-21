@@ -1,45 +1,42 @@
-import { useEffect, useState } from "react";
-
 // Images
 import BgImage from "assets/sonicHero.webp";
 import HeroImage from "features/home/components/HeroImage";
 
 //Component
+import Spinner from "components/Spinner";
 import GameList from "features/home/components/GameList";
-
-const BASEURL = `http://localhost:8000`;
+import { useFeaturedGames, useStaffPicks, useTrendingGames } from "../hooks";
 
 function HomePage() {
-  const [trendingGames, setTrendingGames] = useState([]);
-  const [featuredGames, setFeaturedGames] = useState([]);
-  const [staffGames, setStaffGames] = useState([]);
+  const {
+    data: trendingGames,
+    isLoading: loadingTrending,
+    isError: trendingError,
+    error: trendingErrorObj,
+  } = useTrendingGames();
 
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const [trendingRes, featuredRes, staffRes] = await Promise.all([
-          fetch(`${BASEURL}/games/lists/trending`),
-          fetch(`${BASEURL}/games/lists/featured`),
-          fetch(`${BASEURL}/games/lists/staff-picks`),
-        ]);
+  const {
+    data: staffPicks,
+    isLoading: loadingStaffPicks,
+    isError: staffPicksError,
+    error: staffPicksErrorObj,
+  } = useStaffPicks();
 
-        const [trendingData, featuredData, staffData] = await Promise.all([
-          trendingRes.json(),
-          featuredRes.json(),
-          staffRes.json(),
-        ]);
+  const {
+    data: featuredGames,
+    isLoading: loadingFeaturedGames,
+    isError: featuredGamesError,
+    error: featuredGamesErrorObj,
+  } = useFeaturedGames();
 
-        setTrendingGames(trendingData.trendingGames);
-        setFeaturedGames(featuredData.featured);
-        setStaffGames(staffData.staffPicks);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchGames();
-  }, []);
-
+  if (loadingTrending || loadingStaffPicks || loadingFeaturedGames)
+    return <Spinner />;
+  if (trendingError)
+    return <p>Error loading trending games: {trendingErrorObj.message}</p>;
+  if (staffPicksError)
+    return <p>Error loading staff picks: {staffPicksErrorObj.message}</p>;
+  if (featuredGamesError)
+    return <p>Error loading staff picks: {featuredGamesErrorObj.message}</p>;
   return (
     <div>
       <HeroImage
@@ -48,8 +45,8 @@ function HomePage() {
       />
       <div className="flex flex-col gap-10 mx-auto p-20 max-w-[1700px]">
         <GameList header="Trending" games={trendingGames} />
-        <GameList header="Highly Rated" games={featuredGames} />
-        <GameList header="Staff Picks" games={staffGames} />
+        <GameList header="Featured Games" games={featuredGames} />
+        <GameList header="Staff Picks" games={staffPicks} />
       </div>
     </div>
   );

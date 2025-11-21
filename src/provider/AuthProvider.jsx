@@ -1,7 +1,7 @@
 // src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 
-const API_URL = import.meta.env.VITE_USER_MICRO_API;
+const API_URL = import.meta.env.VITE_USER_API;
 
 const AuthContext = createContext();
 
