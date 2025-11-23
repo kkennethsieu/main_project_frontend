@@ -1,13 +1,11 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 //Components
 import GameCard from "components/GameCard";
 import Pagination from "components/Pagination";
 
-//Images
-import BF6Img from "assets/battlefield6.jpg";
 function GameList({ header, games }) {
   const [currentPage, setCurrentPage] = useState(1);
 

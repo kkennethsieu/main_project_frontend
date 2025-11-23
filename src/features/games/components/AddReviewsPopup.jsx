@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 import Button from "components/Button";
 import Modal from "components/Modal";
@@ -13,56 +12,45 @@ function AddReviewsPopup({
   reviewToEdit = null,
   onSetReview,
 }) {
-  const { id, title, imageUrl, platforms } = gameData;
-  const [rating, setRating] = useState(reviewToEdit?.reviewScore || null);
+  const { title, imageUrl } = gameData;
+  const [reviewScore, setReviewScore] = useState(
+    reviewToEdit?.reviewScore || null
+  );
   const [review, setReview] = useState({
     title: reviewToEdit?.reviewTitle || "",
     body: reviewToEdit?.reviewBody || "",
   });
-  const [selectedPlatform, setSelectedPlatform] = useState(
-    reviewToEdit?.platform || platforms?.[0] || ""
-  );
-
+  //This will set the initial values when editing a review IF THERE IS A REVIEW
   useEffect(() => {
     if (!reviewToEdit) return;
 
-    setRating(reviewToEdit.reviewScore);
+    setReviewScore(reviewToEdit.reviewScore);
     setReview({
       title: reviewToEdit.reviewTitle,
       body: reviewToEdit.reviewBody,
     });
-    setSelectedPlatform(reviewToEdit.platform);
   }, [reviewToEdit]);
 
+  //Handle adding a new review
   const handleAdd = () => {
     const newReview = {
-      reviewId: Date.now(),
-      id,
-      title,
-      rating,
-      author: "Kenny",
+      reviewScore,
       reviewTitle: review.title,
       reviewBody: review.body,
-      platform: selectedPlatform,
-      date: new Date().toISOString(),
-      likes: 0,
-      dislikes: 0,
-      verified: true,
-      language: "en-US",
+      //need to change this
+      category: "Recommended",
     };
     onSetReview(newReview);
-    setRating(null);
+    setReviewScore(null);
     setReview({ title: "", body: "" });
-    setSelectedPlatform(platforms?.[0] || "");
   };
-
+  //Handles editing an exisitng reivew
   const handleEdit = () => {
     const updatedReview = {
       ...reviewToEdit,
-      rating,
+      reviewScore,
       reviewTitle: review.title,
       reviewBody: review.body,
-      platform: selectedPlatform,
     };
     console.log("edited");
     onSetReview(updatedReview);
@@ -71,21 +59,18 @@ function AddReviewsPopup({
   const handleSubmit = () => {
     if (reviewToEdit) {
       handleEdit();
-      toast.success("Review successfully edited");
     } else {
-      toast.success("Review successfully added");
       handleAdd();
     }
     setIsOpen(false);
   };
 
   const handleCancel = () => {
-    setRating(reviewToEdit?.rating || null);
+    setReviewScore(reviewToEdit?.reviewScore || null);
     setReview({
       title: reviewToEdit?.reviewTitle || "",
       body: reviewToEdit?.reviewBody || "",
     });
-    setSelectedPlatform(reviewToEdit?.platform || platforms?.[0] || "");
     setIsOpen(false);
   };
 
@@ -117,7 +102,7 @@ function AddReviewsPopup({
             </div>
           </section>
 
-          <RatingSlider onSelect={setRating} value={rating} />
+          <RatingSlider onSelect={setReviewScore} value={reviewScore} />
           <ReviewTextBox onChange={setReview} value={review} />
         </main>
 

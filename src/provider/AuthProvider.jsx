@@ -55,6 +55,9 @@ export const AuthProvider = ({ children }) => {
   };
   // --- Login ---
   const login = async (username, password) => {
+    if (!username || !password) {
+      throw new Error("Invalid inputs");
+    }
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
@@ -132,16 +135,36 @@ export const AuthProvider = ({ children }) => {
   // --- Initialize auth on app load ---
   useEffect(() => {
     const initializeAuth = async () => {
-      const storedToken = localStorage.getItem("accessToken");
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      try {
+        const storedToken = localStorage.getItem("accessToken");
 
-      if (storedToken && storedUser) {
-        setAccessToken(storedToken);
-        setUser(storedUser);
-        await refreshToken();
+        // Safely parse stored user
+        let storedUser = null;
+        const rawUser = localStorage.getItem("user");
+        if (rawUser) {
+          try {
+            storedUser = JSON.parse(rawUser);
+          } catch (err) {
+            console.error("Failed to parse stored user:", err);
+            storedUser = null;
+            localStorage.removeItem("user"); // optional: cleanup corrupted data
+          }
+        }
+
+        // If both token and user exist, set them and refresh
+        if (storedToken && storedUser) {
+          setAccessToken(storedToken);
+          setUser(storedUser);
+
+          // Refresh token to get a new access token
+          await refreshToken();
+        }
+      } catch (err) {
+        console.error("Error initializing auth:", err);
+        clearAuth(); // reset auth if anything goes wrong
+      } finally {
+        setLoading(false); // done initializing
       }
-
-      setLoading(false); // done initializing
     };
 
     initializeAuth();

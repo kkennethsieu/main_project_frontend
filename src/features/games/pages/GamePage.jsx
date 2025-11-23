@@ -42,10 +42,6 @@ function GamePage() {
     currentPage * limit
   );
 
-  function handleAdd(newReview) {
-    // setReviews((prev) => [...prev, newReview]);
-  }
-
   if (loadingGame || loadingReviews) return <Spinner />;
 
   if (gameError) return <p>Error loading game: {gameErrorObj.message}</p>;
@@ -74,13 +70,12 @@ function GamePage() {
                 setCurrentPage={setCurrentPage}
                 currentReviews={currentReviews}
                 totalPages={totalPages}
-                handleAdd={handleAdd}
               />
             </div>
 
             {/* Right side - About Game */}
             <div className="w-full lg:w-1/3">
-              <AboutGame gameData={gameData} handleAdd={handleAdd} />
+              <AboutGame gameData={gameData} />
             </div>
           </div>
         </>

@@ -1,10 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+//Components
 import Button from "components/Button";
 import AddReviewsPopup from "games/components/AddReviewsPopup";
 
-function AboutGame({ gameData, handleAdd }) {
-  const { releaseYear, genres, developer, publisher, description } = gameData;
+//Hooks/Prpoviders
+import { useCreateReview } from "../hooks/useCreateReview";
+import { useAuth } from "provider/AuthProvider";
 
+function AboutGame({ gameData }) {
+  const { releaseYear, genres, developer, publisher, description } = gameData;
+  const { user } = useAuth();
+
+  const nav = useNavigate();
   // Normalize genres in case API sends stringified array
   const genreList = Array.isArray(genres)
     ? genres
@@ -13,6 +21,28 @@ function AboutGame({ gameData, handleAdd }) {
     : [];
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const createReviewMutation = useCreateReview(gameData.id, user?.userId);
+  const handleAdd = (newData) => {
+    // craete must contain reviewScore, reviewTitle,reviewBody, and userId
+    const newReview = {
+      userId: user.userId,
+      gameId: gameData.id,
+      reviewScore: newData.reviewScore,
+      reviewTitle: newData.reviewTitle,
+      reviewBody: newData.reviewBody,
+      category: newData.category,
+    };
+    createReviewMutation.mutate(newReview);
+  };
+
+  const handleOpen = () => {
+    if (!user) {
+      nav("/login");
+    } else {
+      setIsOpen(true);
+    }
+  };
 
   return (
     <>
@@ -65,15 +95,16 @@ function AboutGame({ gameData, handleAdd }) {
         <div className="mt-8">
           <Button
             className="flex justify-center items-center gap-2 bg-orange-500 hover:bg-orange-600 shadow-md hover:shadow-lg px-6 py-3 rounded-xl w-full font-semibold transition-colors"
-            onClick={() => setIsOpen(true)}
+            onClick={handleOpen}
           >
-            ✍ Review This Game
+            {user ? "✍ Review This Game" : "Log in to Review This Game"}
           </Button>
         </div>
       </div>
 
       {/* Add Review Popup */}
-      {isOpen && (
+
+      {isOpen && user && (
         <AddReviewsPopup
           onSetReview={handleAdd}
           isOpen={isOpen}

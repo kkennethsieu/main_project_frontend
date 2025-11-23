@@ -8,6 +8,7 @@ import SocialLogos from "components/SocialLogos";
 //Menu
 import ActionMenuHover from "components/ActionMenuHover";
 import ConfirmModal from "components/ConfirmModal";
+import Spinner from "components/Spinner";
 
 //Other
 import { toast } from "react-hot-toast";
@@ -16,7 +17,7 @@ import { useAuth } from "../../provider/AuthProvider";
 function Navbar() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const nav = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const handleLogout = async () => {
     try {
       await logout();
@@ -36,6 +37,10 @@ function Navbar() {
 
   const loggedOutActions = [{ label: "Sign In", onClick: () => nav("/login") }];
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
     <>
       <div className="flex justify-between items-center mx-auto px-20 py-4 w-full max-w-[1700px]">
@@ -52,7 +57,10 @@ function Navbar() {
               user ? nav("/account") : nav("/login");
             }}
           />
-          <p className="text-center">{user ? user.username : "Log In"}</p>
+          <div className="flex justify-center items-center gap-3">
+            {user && <img src={user?.avatarURL} height={22} width={22} />}
+            <p className="text-center">{user ? user.username : "Log In"}</p>
+          </div>
         </div>
       </div>
 
