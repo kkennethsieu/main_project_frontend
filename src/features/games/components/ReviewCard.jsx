@@ -1,8 +1,23 @@
-export default function ReviewCard({ review }) {
-  const { reviewScore, reviewBody, reviewTitle, createdAt, likes, dislikes } =
-    review;
+import { useDislikeReview, useLikeReview } from "../hooks";
+import { useAuth } from "provider/AuthProvider";
 
+export default function ReviewCard({ review }) {
+  const { reviewScore, reviewBody, reviewTitle, createdAt, gameId, reviewId } =
+    review;
   const { username, avatarURL } = review.user || {};
+  const { likes, dislikes } = review.likesCount || {};
+
+  const { user } = useAuth();
+  const likeReview = useLikeReview(gameId, reviewId, user.userId);
+  const dislikeReview = useDislikeReview(gameId, reviewId, user.userId);
+  const handleLike = () => {
+    likeReview.mutate();
+    console.log("liked");
+  };
+  const handleDislike = () => {
+    dislikeReview.mutate();
+    console.log("liked");
+  };
 
   return (
     <div className="bg-white shadow-sm hover:shadow-md mb-5 p-5 border border-gray-200 rounded-2xl w-full transition-all duration-200">
@@ -54,8 +69,18 @@ export default function ReviewCard({ review }) {
         </div>
 
         <div className="flex items-center gap-3 text-gray-500 text-xs">
-          <span className="flex items-center gap-1">👍 {likes || 0}</span>
-          <span className="flex items-center gap-1">👎 {dislikes || 0}</span>
+          <button
+            className="flex items-center gap-1"
+            onClick={() => handleLike()}
+          >
+            👍 {likes || 0}
+          </button>
+          <button
+            className="flex items-center gap-1"
+            onClick={() => handleDislike()}
+          >
+            👎 {dislikes || 0}
+          </button>
         </div>
       </div>
     </div>

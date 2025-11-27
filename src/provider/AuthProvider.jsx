@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }) => {
       if (!res.ok) throw new Error("Invalid credentials");
 
       const data = await res.json();
+      console.log(data);
       saveAuth(data.accessToken, data.user);
     } catch (err) {
       console.error("Login failed:", err);

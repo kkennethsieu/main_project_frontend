@@ -5,19 +5,23 @@ import { useState } from "react";
 import Logo from "components/Logo";
 import SocialLogos from "components/SocialLogos";
 
-//Menu
+//Components
 import ActionMenuHover from "components/ActionMenuHover";
 import ConfirmModal from "components/ConfirmModal";
 import Spinner from "components/Spinner";
+import NotificationList from "components/NotificationList";
 
 //Other
 import { toast } from "react-hot-toast";
-import { useAuth } from "../../provider/AuthProvider";
+import { useAuth } from "provider/AuthProvider";
 
 function Navbar() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const nav = useNavigate();
+
   const { user, logout, loading } = useAuth();
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -48,7 +52,7 @@ function Navbar() {
         <Link to="/">
           <Logo />
         </Link>
-        <div>
+        <div className="flex items-center gap-3">
           <ActionMenuHover
             buttonContent="My Account"
             actions={user ? loggedInActions : loggedOutActions}
@@ -61,6 +65,7 @@ function Navbar() {
             {user && <img src={user?.avatarURL} height={22} width={22} />}
             <p className="text-center">{user ? user.username : "Log In"}</p>
           </div>
+          {user && <NotificationList />}
         </div>
       </div>
 

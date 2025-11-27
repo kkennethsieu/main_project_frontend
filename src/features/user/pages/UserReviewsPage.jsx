@@ -30,11 +30,10 @@ function UserReviewsPage() {
   }
   const limit = 3;
   const totalPages = Math.ceil(reviewsWithGame.length / limit);
-  const currentReviews = reviewsWithGame.slice(0, 0);
-  // const currentReviews = reviewsWithGame.slice(
-  //   (currentPage - 1) * limit,
-  //   currentPage * limit
-  // );
+  const currentReviews = reviewsWithGame.slice(
+    (currentPage - 1) * limit,
+    currentPage * limit
+  );
 
   return (
     <div className="flex flex-col gap-2 space-y-3 p-4">
@@ -42,9 +41,9 @@ function UserReviewsPage() {
         My Reviews
         <span className="block mt-1 border-gray-300 border-b w-40"></span>
       </h2>
-      <div className="flex justify-center mx-auto">
-        {currentReviews.length > 0 ? (
-          <>
+      {currentReviews.length > 0 ? (
+        <>
+          <div className="flex justify-center mx-auto">
             <div className="gap-6 grid grid-cols-3">
               {currentReviews.map((reviewAndData) => (
                 <UserReviewCard
@@ -53,23 +52,23 @@ function UserReviewsPage() {
                 />
               ))}
             </div>
-            <div className="flex justify-center mx-auto">
-              <Pagination
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                totalPages={totalPages}
-              />
-            </div>
-          </>
-        ) : (
-          <NoDataYet
-            message="No reviews yet."
-            actionText="Add the first review"
-            user={user}
-            onAction={() => nav("/")}
-          />
-        )}
-      </div>
+          </div>
+          <div className="flex justify-center mx-auto">
+            <Pagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+            />
+          </div>
+        </>
+      ) : (
+        <NoDataYet
+          message="No reviews yet."
+          actionText="Add the first review"
+          user={user}
+          onAction={() => nav("/")}
+        />
+      )}
     </div>
   );
 }
