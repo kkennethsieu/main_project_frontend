@@ -1,5 +1,3 @@
-// src/components/Hero.jsx
-import React from "react";
 import SearchBar from "./SearchBar";
 
 const HeroImage = ({ image, title, subtitle, textAlign = "center" }) => {
