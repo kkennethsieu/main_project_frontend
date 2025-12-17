@@ -10,7 +10,7 @@ export const fetchSearchGames = async (searchTerm) => {
 
   if (!searchTerm) return [];
   const res = await fetch(
-    `${import.meta.env.VITE_CATALOG_API}/games/search/${searchTerm}`
+    `${import.meta.env.VITE_GATEWAY_API}/api/games/games/search/${searchTerm}`
   );
   if (!res.ok) throw new Error("Error fetching search results");
   const data = await res.json();

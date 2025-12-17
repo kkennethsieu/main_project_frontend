@@ -20,7 +20,7 @@ export const createReview = async (data) => {
   }
 
   const response = await fetch(
-    `${import.meta.env.VITE_REVIEW_API}/reviews/create`,
+    `${import.meta.env.VITE_GATEWAY_API}/api/reviews/reviews/create`,
     {
       method: "POST",
       headers: {

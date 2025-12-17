@@ -41,8 +41,8 @@ export const createLikeReview = async (userId, reviewId, authorId) => {
   // Real API call
   const response = await fetch(
     `${
-      import.meta.env.VITE_LIKE_API
-    }/likes/like/${userId}/${reviewId}/${authorId}`,
+      import.meta.env.VITE_GATEWAY_API
+    }/api/likes/likes/like/${userId}/${reviewId}/${authorId}`,
     {
       method: "POST",
       headers: {
@@ -94,8 +94,8 @@ export const createDislikeReview = async (userId, reviewId, authorId) => {
 
   const response = await fetch(
     `${
-      import.meta.env.VITE_LIKE_API
-    }/likes/dislike/${userId}/${reviewId}/${authorId}`,
+      import.meta.env.VITE_GATEWAY_API
+    }/api/likes/likes/dislike/${userId}/${reviewId}/${authorId}`,
     {
       method: "POST",
       headers: {

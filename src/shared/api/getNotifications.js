@@ -8,7 +8,9 @@ export const fetchNotifications = async (userId) => {
     return mockData;
   }
   const res = await fetch(
-    `${import.meta.env.VITE_NOTIFY_API}/notify/notifications/${userId}`
+    `${
+      import.meta.env.VITE_GATEWAY_API
+    }/api/notification/notify/notifications/${userId}`
   );
   if (!res.ok) throw new Error("Error fetching notifications with user");
 

@@ -7,7 +7,7 @@ export const fetchGameWithId = async (gameId) => {
   }
 
   const res = await fetch(
-    `${import.meta.env.VITE_CATALOG_API}/games/id/${gameId}`
+    `${import.meta.env.VITE_GATEWAY_API}/api/games/games/id/${gameId}`
   );
   if (!res.ok) throw new Error("Error fetching game");
   const data = await res.json();

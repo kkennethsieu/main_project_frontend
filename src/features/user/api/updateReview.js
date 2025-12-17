@@ -3,7 +3,9 @@ export const updateReview = async (data) => {
     return;
   }
   const response = await fetch(
-    `${import.meta.env.VITE_REVIEW_API}/reviews/update/${data.reviewId}`,
+    `${import.meta.env.VITE_GATEWAY_API}/api/reviews/reviews/update/${
+      data.reviewId
+    }`,
     {
       method: "PATCH",
       headers: {

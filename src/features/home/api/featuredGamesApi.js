@@ -6,7 +6,7 @@ export const fetchFeaturedGames = async () => {
   }
 
   const res = await fetch(
-    `${import.meta.env.VITE_CATALOG_API}/games/lists/featured`
+    `${import.meta.env.VITE_GATEWAY_API}/api/games/games/lists/featured`
   );
   const data = await res.json();
   if (!res.ok) throw new Error("Error fetching featured games");

@@ -3,7 +3,9 @@ export const deleteReview = async (reviewId) => {
     return;
   }
   const res = await fetch(
-    `${import.meta.env.VITE_REVIEW_API}/reviews/delete/${reviewId}`,
+    `${
+      import.meta.env.VITE_GATEWAY_API
+    }/api/reviews/reviews/delete/${reviewId}`,
     {
       method: "DELETE",
     }
