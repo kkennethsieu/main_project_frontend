@@ -51,7 +51,7 @@ function Reviews({
       <div className="space-y-8 p-6 md:p-8">
         <h2 className="font-bold text-3xl">Reviews: {gameData.gameName}</h2>
         <section className="flex flex-col justify-center items-center mx-auto">
-          {currentReviews.length > 0 ? (
+          {currentReviews && currentReviews.length > 0 ? (
             <>
               <ReviewFilter />
               {currentReviews.map((review) => (

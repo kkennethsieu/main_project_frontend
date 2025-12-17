@@ -36,8 +36,8 @@ function GamePage() {
   const limit = 5;
 
   const totalPages = Math.ceil(reviews?.length / limit);
-
-  const currentReviews = reviews.slice(
+  let currentReviews;
+  currentReviews = reviews.slice(
     (currentPage - 1) * limit,
     currentPage * limit
   );
@@ -45,8 +45,9 @@ function GamePage() {
   if (loadingGame || loadingReviews) return <Spinner />;
 
   if (gameError) return <p>Error loading game: {gameErrorObj.message}</p>;
-  if (reviewsError)
-    return <p>Error loading reviews: {reviewsErrorObj.message}</p>;
+  if (reviewsError) {
+    currentReviews = 0;
+  }
 
   const screenshotsArray = Array.isArray(gameData?.screenshots)
     ? gameData.screenshots // already an array
